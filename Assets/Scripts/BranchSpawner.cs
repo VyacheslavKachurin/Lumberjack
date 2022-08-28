@@ -13,6 +13,8 @@ public class BranchSpawner
     private readonly Transform _branchSpawnPoint;
     private readonly float _shaftWidth;
 
+    private EPosition[] _positions;
+
 
     public BranchSpawner(Player player, Shaft shaft, GameObject branch)
     {
@@ -31,15 +33,24 @@ public class BranchSpawner
             }
         };
 
+        SetDifficultyHarder(false);
+
+
     }
 
     private EPosition GetRandomValue()
     {
-        var values = Enum.GetValues(typeof(EPosition));
-        var length = values.Length;
-        var random = UnityEngine.Random.Range(0, length);
-        return (EPosition)values.GetValue(random);
+        var random = UnityEngine.Random.Range(0, _positions.Length);
+        return (EPosition)_positions.GetValue(random);
 
+    }
+
+    public void SetDifficultyHarder(bool value)
+    {
+        if (value)
+            _positions = new EPosition[2] { EPosition.Right, EPosition.Left };
+        else
+            _positions = (EPosition[])Enum.GetValues(typeof(EPosition));
     }
 
     private void SpawnBranch(EPosition position)

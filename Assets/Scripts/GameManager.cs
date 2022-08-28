@@ -19,6 +19,9 @@ public class GameManager : MonoBehaviour
     private int _levelPoints;
     private int _levelNumber;
 
+    private float _secondsWaitedToDecreaseBar = 0.04f;
+    private const float _stepForDecreaseBar = 0.001f;
+
     private float Counter
     {
         get { return _counter; }
@@ -70,7 +73,7 @@ public class GameManager : MonoBehaviour
             _gameUI.UpdateScoreBar(Counter);
             if (Counter < 1)
                 FinishGame();
-            yield return new WaitForSeconds(0.04f);
+            yield return new WaitForSeconds(_secondsWaitedToDecreaseBar);
         }
     }
 
@@ -114,7 +117,9 @@ public class GameManager : MonoBehaviour
         _gameUI.UpdateLevelNumber(_levelNumber);
         _gameUI.UpdateScoreBar(_counter);
         _gameUI.UpdateScoreText(_score);
+
         _branchSpawner.ClearBranches();
+        _branchSpawner.SetDifficultyHarder(false);
 
         _player.PlayerMoved += AddScore;
         _gameUI.HideMenuPanel();
@@ -134,8 +139,12 @@ public class GameManager : MonoBehaviour
         if (_levelPoints % 20 == 0)
         {
             _levelNumber++;
-            _levelPoints = 0;
+            _secondsWaitedToDecreaseBar -= _stepForDecreaseBar;
+              _levelPoints = 0;
             _gameUI.UpdateLevelNumber(_levelNumber);
+
+            if(_levelNumber==5)
+            _branchSpawner.SetDifficultyHarder(true);
         }
     }
 

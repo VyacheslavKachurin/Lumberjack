@@ -6,27 +6,36 @@ using UnityEngine;
 public class Branch : MonoBehaviour
 {
     public event Action BranchDestroyed;
-    public static float Width;
+
     private float _step;
     private Player _player;
-
+    private Rigidbody2D _rb;
+    private bool _movingAllowed = false;
     public void Initialize(Player player)
     {
         _player = player;
         _player.PlayerMoved += MoveDown;
 
         _step = Player.Height * 1.5f;
-        Width = this.transform.lossyScale.x;
-      
+
+        _rb = GetComponent<Rigidbody2D>();
     }
 
-    public void MoveDown()
+    private void MoveDown()
     {
         if (Values.Instance.IsGameOn)
+            _movingAllowed = true;
+        else
+            _movingAllowed = false;
+    }
 
-            this.transform.Translate(Vector2.down * _step, Space.World);
-        //   _rb.MovePosition(_rb.position + Vector2.down * Time.fixedDeltaTime);
-
+    private void FixedUpdate()
+    {
+        if (_movingAllowed)
+        {
+            _rb.MovePosition(_rb.position+Vector2.down * _step);
+            _movingAllowed = false;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision) => BranchDestroyed?.Invoke();
