@@ -25,7 +25,7 @@ public class Player : MonoBehaviour
     {
         inputManager.LeftButtonPressed += (position) => ChangePosition(position);
         inputManager.RightButtonPressed += (position) => ChangePosition(position);
-       
+
     }
 
     public void ChangePosition(EPosition position)
@@ -41,9 +41,6 @@ public class Player : MonoBehaviour
 
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        PlayerDied?.Invoke();
-    }
+    private void OnTriggerEnter2D(Collider2D collision) => PlayerDied?.Invoke();
 
 }

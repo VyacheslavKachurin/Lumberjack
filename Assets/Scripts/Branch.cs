@@ -22,7 +22,7 @@ public class Branch : MonoBehaviour
 
     public void MoveDown()
     {
-        if (Settings.Instance.IsGameOn)
+        if (Values.Instance.IsGameOn)
 
             this.transform.Translate(Vector2.down * _step, Space.World);
         //   _rb.MovePosition(_rb.position + Vector2.down * Time.fixedDeltaTime);

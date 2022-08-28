@@ -5,8 +5,10 @@ using UnityEngine;
 
 public class Shaft : MonoBehaviour
 {
+    [SerializeField] private Transform _branchSpawnPoint;
+    public Transform BranchSpawnPoint => _branchSpawnPoint;
 
-    public static float Width;
+    public float Width { get; private set; }
     private float _y;
     private SpriteRenderer _spriteRenderer;
 
@@ -21,7 +23,7 @@ public class Shaft : MonoBehaviour
 
     private void ScrollTexture()
     {
-        if (Settings.Instance.IsGameOn)
+        if (Values.Instance.IsGameOn)
         {
             float Y = Mathf.Repeat(_y += 0.1f, 1);
             _spriteRenderer.material.mainTextureOffset = new Vector2(0, Y);

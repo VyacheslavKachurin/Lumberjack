@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 179108184161132359}
   - component: {fileID: 179108184161132358}
   - component: {fileID: 179108184161132356}
-  - component: {fileID: 179108184161132357}
   m_Layer: 0
   m_Name: Shaft
   m_TagString: Untagged
@@ -130,17 +129,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 394233015ce46de4493e5699494a13af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &179108184161132357
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 179108184161132353}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 76b1c264e31b00c4090d761ae4bb0f30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   _branchSpawnPoint: {fileID: 179108183419425955}
-  _branch: {fileID: -2235947509068646493, guid: ff605f428811e914e99f529cdb622c59, type: 3}

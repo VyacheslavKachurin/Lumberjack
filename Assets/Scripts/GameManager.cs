@@ -11,9 +11,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Player _player;
     [SerializeField] private BranchSpawner _branchSpawner;
     [SerializeField] private GameObject _floor;
+    [SerializeField] private Shaft _shaft;
+    [SerializeField] private GameObject _branch;
 
     private Coroutine _scoreCoroutine;
     private int _score;
+    private int _levelPoints;
+    private int _levelNumber;
 
     private float Counter
     {
@@ -25,8 +29,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        if (Settings.Instance == null)
-            _ = new Settings();
+        if (Values.Instance == null)
+            _ = new Values();
 
         _gameUI = Instantiate(_gameUI);
 
@@ -37,14 +41,16 @@ public class GameManager : MonoBehaviour
         _player.PlayerDied += FinishGame;
         _player.Initialize(_gameUI.InputManager);
 
-        _branchSpawner = Instantiate(_branchSpawner);
-        _branchSpawner.Initialize(_player);
+        _shaft = Instantiate(_shaft, new Vector2(0, 0), Quaternion.identity);
+        _shaft.Initialize(_player);
+        _branchSpawner = new(_player, _shaft, _branch);
+
 
         _cleanerTrigger = Instantiate(_cleanerTrigger, new Vector2(0, -5), Quaternion.identity);
 
         _floor = Instantiate(_floor, new Vector2(0, -5.67f), Quaternion.identity);
 
-        _gameUI.UpdateHighScoreText(Settings.Instance.HighScore);
+        _gameUI.UpdateHighScoreText(Values.Instance.HighScore);
 
     }
 
@@ -58,7 +64,7 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator DescreaseCounter()
     {
-        while (Settings.Instance.IsGameOn)
+        while (Values.Instance.IsGameOn)
         {
             Counter -= 0.1f;
             _gameUI.UpdateScoreBar(Counter);
@@ -70,18 +76,22 @@ public class GameManager : MonoBehaviour
 
     public void FinishGame()
     {
-        Settings.Instance.FinishGame();
+        Values.Instance.FinishGame();
         _player.PlayerMoved -= AddScore;
         StopCoroutine(_scoreCoroutine);
         _gameUI.ShowRestartText();
 
-        Settings.Instance.HighScore = _score;
-        _gameUI.UpdateHighScoreText(Settings.Instance.HighScore);
+        Values.Instance.HighScore = _score;
+        _gameUI.UpdateHighScoreText(Values.Instance.HighScore);
+        _gameUI.UpdateYourScore(_score);
     }
 
     private void AddScore()
     {
         _score++;
+        _levelPoints++;
+        TrackLevelNumber();
+
         _gameUI.UpdateScoreText(_score);
         Counter++;
         _gameUI.UpdateScoreBar(Counter);
@@ -99,14 +109,16 @@ public class GameManager : MonoBehaviour
 
         Counter = 10;
         _score = 0;
-
+        _levelPoints = 0;
+        _levelNumber = 1;
+        _gameUI.UpdateLevelNumber(_levelNumber);
         _gameUI.UpdateScoreBar(_counter);
         _gameUI.UpdateScoreText(_score);
         _branchSpawner.ClearBranches();
 
         _player.PlayerMoved += AddScore;
         _gameUI.HideMenuPanel();
-        Settings.Instance.StartGame();
+        Values.Instance.StartGame();
         _scoreCoroutine = StartCoroutine(DescreaseCounter());
 
     }
@@ -115,6 +127,16 @@ public class GameManager : MonoBehaviour
     {
         CreateInitialConditions();
         _gameUI.HideRestartText();
+    }
+
+    private void TrackLevelNumber()
+    {
+        if (_levelPoints % 20 == 0)
+        {
+            _levelNumber++;
+            _levelPoints = 0;
+            _gameUI.UpdateLevelNumber(_levelNumber);
+        }
     }
 
 }

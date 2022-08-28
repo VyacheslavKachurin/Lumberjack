@@ -20,6 +20,8 @@ public class GameUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _gameOverText;
     [SerializeField] private TextMeshProUGUI _tryAgainText;
     [SerializeField] private TextMeshProUGUI _highScoreNumber;
+    [SerializeField] private TextMeshProUGUI _yourScoreNumber;
+    [SerializeField] private TextMeshProUGUI _levelNumberText;
 
     [SerializeField] private Slider _scoreSlider;
     [SerializeField] private GameObject _pausePanel;
@@ -33,7 +35,6 @@ public class GameUI : MonoBehaviour
 
     void Start()
     {
-
         _pauseButton.onClick.AddListener(() => PauseButtonToggled?.Invoke());
         _continueButton.onClick.AddListener(() => PauseButtonToggled?.Invoke());
         _sfxButton.onClick.AddListener(() => SFXButtonToggled?.Invoke());
@@ -45,9 +46,9 @@ public class GameUI : MonoBehaviour
 
         _tryAgainText.enabled = false;
         _gameOverText.enabled = false;
-
     }
 
+    public void UpdateLevelNumber(int value) => _levelNumberText.text = value.ToString();
     public void UpdateScoreText(int value) => _scoreText.text = value.ToString();
     public void UpdateScoreBar(float value) => _scoreSlider.value = value;
     private void TogglePausePanel() => _pausePanel.SetActive(!_pausePanel.activeInHierarchy);
@@ -71,4 +72,6 @@ public class GameUI : MonoBehaviour
         _playButton.onClick.AddListener(() => RestartButtonPressed?.Invoke());
         _menuPanel.SetActive(true);
     }
+
+    public void UpdateYourScore(int value) => _yourScoreNumber.text = value.ToString();
 }

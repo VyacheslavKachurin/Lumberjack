@@ -3,21 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BranchSpawner : MonoBehaviour
+public class BranchSpawner
 {
-    [SerializeField] Transform _branchSpawnPoint;
-    [SerializeField] Branch _branch;
-
     private int _counter = 0;
-    private Player _player;
-    private Queue<Branch> _branches = new();
+
+    private readonly GameObject _branch;
+    private readonly Player _player;
+    private readonly Queue<Branch> _branches = new();
+    private readonly Transform _branchSpawnPoint;
+    private readonly float _shaftWidth;
 
 
-    public void Initialize(Player player)
+    public BranchSpawner(Player player, Shaft shaft, GameObject branch)
     {
         _player = player;
-        Shaft shaft = GetComponent<Shaft>();
-        shaft.Initialize(player);
+        _branchSpawnPoint = shaft.BranchSpawnPoint;
+        _shaftWidth = shaft.Width;
+        _branch = branch;
 
         _player.PlayerMoved += () =>
         {
@@ -44,12 +46,13 @@ public class BranchSpawner : MonoBehaviour
     {
         if (position == EPosition.Middle)
             return;
-        Branch branchInstance = Instantiate(_branch, _branchSpawnPoint.position, Quaternion.identity);
+        Branch branchInstance = UnityEngine.Object.Instantiate(_branch, _branchSpawnPoint.position, Quaternion.identity).GetComponent<Branch>();
+
         branchInstance.Initialize(_player);
         branchInstance.BranchDestroyed += DestroyBranch;
         _branches.Enqueue(branchInstance);
 
-        var offset = branchInstance.transform.lossyScale.x / 2 + Shaft.Width / 2; //TODO: avoid repeating calculation
+        var offset = branchInstance.transform.lossyScale.x / 2 + _shaftWidth / 2; //TODO: avoid repeating calculation
 
         _ = position switch
         {
