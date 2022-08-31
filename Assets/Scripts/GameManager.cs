@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
         _gameUI.RestartButtonPressed += Restart;
         _player = Instantiate(_player, new Vector2(0, -4.1f), Quaternion.identity);
         _player.PlayerDied += FinishGame;
+        _player.PlayerDisabled += () => ChangeInput(false);
         _player.Initialize(_gameUI.InputManager);
 
         _shaft = Instantiate(_shaft, new Vector2(0, 0), Quaternion.identity);
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
         _floor = Instantiate(_floor, new Vector2(0, -5.67f), Quaternion.identity);
 
         _gameUI.UpdateHighScoreText(Values.Instance.HighScore);
+        Values.Instance.IsInputAllowed = true;
 
     }
 
@@ -89,6 +91,8 @@ public class GameManager : MonoBehaviour
         _gameUI.UpdateYourScore(_score);
     }
 
+    public void ChangeInput(bool value) => Values.Instance.IsInputAllowed = value;
+
     private void AddScore()
     {
         _score++;
@@ -109,7 +113,7 @@ public class GameManager : MonoBehaviour
     private void CreateInitialConditions()
     {
         _player.ChangePosition(EPosition.Left);
-
+        _player.ResetState();
         Counter = 10;
         _score = 0;
         _levelPoints = 0;
@@ -124,6 +128,7 @@ public class GameManager : MonoBehaviour
         _player.PlayerMoved += AddScore;
         _gameUI.HideMenuPanel();
         Values.Instance.StartGame();
+        Values.Instance.IsInputAllowed = true;
         _scoreCoroutine = StartCoroutine(DescreaseCounter());
 
     }
@@ -140,11 +145,11 @@ public class GameManager : MonoBehaviour
         {
             _levelNumber++;
             _secondsWaitedToDecreaseBar -= _stepForDecreaseBar;
-              _levelPoints = 0;
+            _levelPoints = 0;
             _gameUI.UpdateLevelNumber(_levelNumber);
 
-            if(_levelNumber==5)
-            _branchSpawner.SetDifficultyHarder(true);
+            if (_levelNumber == 5)
+                _branchSpawner.SetDifficultyHarder(true);
         }
     }
 
