@@ -7,20 +7,18 @@ public class BranchSpawner
 {
     private int _counter = 0;
 
+    private const float _xOffset=2.3f;
     private readonly GameObject _branch;
     private readonly Player _player;
     private readonly Queue<Branch> _branches = new();
     private readonly Transform _branchSpawnPoint;
-    private readonly float _shaftWidth;
 
     private EPosition[] _positions;
-
 
     public BranchSpawner(Player player, Shaft shaft, GameObject branch)
     {
         _player = player;
         _branchSpawnPoint = shaft.BranchSpawnPoint;
-        _shaftWidth = shaft.Width;
         _branch = branch;
 
         _player.PlayerMoved += () =>
@@ -63,14 +61,20 @@ public class BranchSpawner
         branchInstance.BranchDestroyed += DestroyBranch;
         _branches.Enqueue(branchInstance);
 
-        var offset = branchInstance.transform.lossyScale.x / 2 + _shaftWidth / 2; //TODO: avoid repeating calculation
 
-        _ = position switch
+        switch (position)
         {
-            EPosition.Left => branchInstance.transform.position = new Vector2(-offset, branchInstance.transform.position.y),
-            EPosition.Right => branchInstance.transform.position = new Vector2(offset, branchInstance.transform.position.y),
-            _ => throw new NotImplementedException()
-        };
+            case
+            EPosition.Left:
+                branchInstance.transform.position = new Vector2(-_xOffset, branchInstance.transform.position.y);
+                branchInstance.transform.localScale = new Vector2(-branchInstance.transform.localScale.x, branchInstance.transform.localScale.y);
+                break;
+
+            case EPosition.Right:
+                branchInstance.transform.position = new Vector2(_xOffset, branchInstance.transform.position.y);
+                break;
+
+        }
     }
 
     private void DestroyBranch()

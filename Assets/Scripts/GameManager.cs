@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _floor;
     [SerializeField] private Shaft _shaft;
     [SerializeField] private GameObject _branch;
+    [SerializeField] private Canvas _backgroundCanvas;
 
     private Coroutine _scoreCoroutine;
     private int _score;
@@ -45,17 +46,20 @@ public class GameManager : MonoBehaviour
         _player.PlayerDisabled += () => ChangeInput(false);
         _player.Initialize(_gameUI.InputManager);
 
-        _shaft = Instantiate(_shaft, new Vector2(0, 0), Quaternion.identity);
+        _shaft = Instantiate(_shaft, new Vector2(0, 3), Quaternion.identity);
         _shaft.Initialize(_player);
         _branchSpawner = new(_player, _shaft, _branch);
 
 
         _cleanerTrigger = Instantiate(_cleanerTrigger, new Vector2(0, -5), Quaternion.identity);
 
-        _floor = Instantiate(_floor, new Vector2(0, -5.67f), Quaternion.identity);
+        _floor = Instantiate(_floor, new Vector2(0, -9.91f), Quaternion.identity);
 
         _gameUI.UpdateHighScoreText(Values.Instance.HighScore);
         Values.Instance.IsInputAllowed = true;
+
+        _backgroundCanvas = Instantiate(_backgroundCanvas);
+        _backgroundCanvas.worldCamera = Camera.main;
 
     }
 

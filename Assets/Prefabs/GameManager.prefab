@@ -49,4 +49,5 @@ MonoBehaviour:
   _player: {fileID: 3700279197219035141, guid: a53af20593766874db8a1aa3a9b3e9bb, type: 3}
   _floor: {fileID: 4827256340157410196, guid: 1bc5f71b8ddf77e45bde32358ef5746d, type: 3}
   _shaft: {fileID: 179108184161132356, guid: 2b0753192dce72340ad963a7e741d81f, type: 3}
-  _branch: {fileID: 8426779335542080190, guid: ff605f428811e914e99f529cdb622c59, type: 3}
+  _branch: {fileID: 6162346895024626883, guid: b0c9d3f46ec10cb478ad92b66c4e7cfd, type: 3}
+  _backgroundCanvas: {fileID: 6906885764713911131, guid: a13874980e8b255468eee364f2145a54, type: 3}
