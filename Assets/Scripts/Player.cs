@@ -7,20 +7,21 @@ public class Player : MonoBehaviour
 {
     public static float Height;
     public event Action PlayerMoved;
+    public event Action<EPosition> PlayerChangedPosition;
+
     public event Action PlayerDied;
     public event Action PlayerDisabled;
 
-    private Transform _transform;
     private float _xStep;
     private Animator _anim;
 
     void Start()
     {
-        _transform = GetComponent<Transform>();
+
+        Height = transform.lossyScale.y;
         _anim = GetComponent<Animator>();
 
-        _xStep = 2 * _transform.lossyScale.x;
-        Height = _transform.lossyScale.y;
+        _xStep = 2 * transform.lossyScale.x;
         PlayerDied += () => _anim.Play("Base Layer.Die");
 
     }
@@ -37,18 +38,19 @@ public class Player : MonoBehaviour
         if (!Values.Instance.IsInputAllowed)
             return;
         PlayerMoved?.Invoke();
+        PlayerChangedPosition?.Invoke(position);
 
         switch (position)
         {
             case EPosition.Left:
 
-                _transform.position = new Vector2(-_xStep, transform.position.y);
-                _transform.localScale = new Vector2(-1, 1);
+                transform.position = new Vector2(-_xStep, transform.position.y);
+                transform.localScale = new Vector2(-1, 1);
                 break;
 
             case EPosition.Right:
-                _transform.position = new Vector2(_xStep, transform.position.y);
-                _transform.localScale = new Vector2(1, 1);
+                transform.position = new Vector2(_xStep, transform.position.y);
+                transform.localScale = new Vector2(1, 1);
                 break;
 
         };

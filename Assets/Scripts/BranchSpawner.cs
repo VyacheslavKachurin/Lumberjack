@@ -56,7 +56,7 @@ public class BranchSpawner
             return;
 
         Vector2 branchPosition = Vector2.zero;
-        GameObject branchType = new();
+        GameObject branchType = null;
 
         switch (position)
         {

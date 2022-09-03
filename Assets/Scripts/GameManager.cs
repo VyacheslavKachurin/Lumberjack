@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject _leftBranch;
     [SerializeField] private GameObject _rightBranch;
     [SerializeField] private Canvas _backgroundCanvas;
+    [SerializeField] private ShaftParticles _shaftParticles;
 
     private Coroutine _scoreCoroutine;
     private int _score;
@@ -61,6 +62,16 @@ public class GameManager : MonoBehaviour
 
         _backgroundCanvas = Instantiate(_backgroundCanvas);
         _backgroundCanvas.worldCamera = Camera.main;
+
+        _shaftParticles = Instantiate(_shaftParticles, new Vector2(0, -4.3f), Quaternion.identity);
+
+        _player.PlayerChangedPosition += (position) =>
+        {
+            if (position == EPosition.Left)
+                _shaftParticles.PlayRight();
+            else
+                _shaftParticles.PlayLeft();
+        };
 
     }
 
