@@ -67,7 +67,6 @@ public class Player : MonoBehaviour
     {
         PlayerDisabled?.Invoke();
         _anim.Play("Base Layer.Die");
-
     }
 
 

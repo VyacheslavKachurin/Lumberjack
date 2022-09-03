@@ -12,7 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private BranchSpawner _branchSpawner;
     [SerializeField] private GameObject _floor;
     [SerializeField] private Shaft _shaft;
-    [SerializeField] private GameObject _branch;
+    [SerializeField] private GameObject _leftBranch;
+    [SerializeField] private GameObject _rightBranch;
     [SerializeField] private Canvas _backgroundCanvas;
 
     private Coroutine _scoreCoroutine;
@@ -48,10 +49,10 @@ public class GameManager : MonoBehaviour
 
         _shaft = Instantiate(_shaft, new Vector2(0, 3), Quaternion.identity);
         _shaft.Initialize(_player);
-        _branchSpawner = new(_player, _shaft, _branch);
+        _branchSpawner = new(_player, _shaft, _leftBranch, _rightBranch);
 
 
-        _cleanerTrigger = Instantiate(_cleanerTrigger, new Vector2(0, -5), Quaternion.identity);
+        _cleanerTrigger = Instantiate(_cleanerTrigger, new Vector2(0, -4.5f), Quaternion.identity);
 
         _floor = Instantiate(_floor, new Vector2(0, -9.91f), Quaternion.identity);
 

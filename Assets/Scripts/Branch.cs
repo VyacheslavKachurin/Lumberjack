@@ -6,17 +6,23 @@ using UnityEngine;
 public class Branch : MonoBehaviour
 {
     public event Action BranchDestroyed;
+    [SerializeField] private ParticleSystem _branchParticle;
 
     private float _step;
     private Player _player;
     private Rigidbody2D _rb;
     private bool _movingAllowed = false;
+    private Vector2 _particlePosition = new(1.43f, -3.81f);
+
     public void Initialize(Player player)
     {
         _player = player;
         _player.PlayerMoved += MoveDown;
 
         _step = Player.Height * 1.5f;
+
+        if (transform.position.x < 0)
+            _particlePosition.x *= -1;
 
         _rb = GetComponent<Rigidbody2D>();
     }
@@ -33,7 +39,7 @@ public class Branch : MonoBehaviour
     {
         if (_movingAllowed)
         {
-            _rb.MovePosition(_rb.position+Vector2.down * _step);
+            _rb.MovePosition(_rb.position + Vector2.down * _step);
             _movingAllowed = false;
         }
     }
@@ -43,6 +49,8 @@ public class Branch : MonoBehaviour
     public void DestroyBranch()
     {
         _player.PlayerMoved -= MoveDown;
+
+        Instantiate(_branchParticle, _particlePosition, Quaternion.identity);
         Destroy(gameObject);
     }
 

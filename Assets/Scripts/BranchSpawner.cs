@@ -7,19 +7,21 @@ public class BranchSpawner
 {
     private int _counter = 0;
 
-    private const float _xOffset=2.3f;
-    private readonly GameObject _branch;
+    private const float _xOffset = 2.3f;
+    private readonly GameObject _leftBranch;
+    private readonly GameObject _rightBranch;
     private readonly Player _player;
     private readonly Queue<Branch> _branches = new();
     private readonly Transform _branchSpawnPoint;
 
     private EPosition[] _positions;
 
-    public BranchSpawner(Player player, Shaft shaft, GameObject branch)
+    public BranchSpawner(Player player, Shaft shaft, GameObject leftBranch, GameObject rightBranch)
     {
         _player = player;
         _branchSpawnPoint = shaft.BranchSpawnPoint;
-        _branch = branch;
+        _leftBranch = leftBranch;
+        _rightBranch = rightBranch;
 
         _player.PlayerMoved += () =>
         {
@@ -32,15 +34,12 @@ public class BranchSpawner
         };
 
         SetDifficultyHarder(false);
-
-
     }
 
     private EPosition GetRandomValue()
     {
         var random = UnityEngine.Random.Range(0, _positions.Length);
         return (EPosition)_positions.GetValue(random);
-
     }
 
     public void SetDifficultyHarder(bool value)
@@ -55,26 +54,29 @@ public class BranchSpawner
     {
         if (position == EPosition.Middle)
             return;
-        Branch branchInstance = UnityEngine.Object.Instantiate(_branch, _branchSpawnPoint.position, Quaternion.identity).GetComponent<Branch>();
 
-        branchInstance.Initialize(_player);
-        branchInstance.BranchDestroyed += DestroyBranch;
-        _branches.Enqueue(branchInstance);
-
+        Vector2 branchPosition = Vector2.zero;
+        GameObject branchType = new();
 
         switch (position)
         {
             case
             EPosition.Left:
-                branchInstance.transform.position = new Vector2(-_xOffset, branchInstance.transform.position.y);
-                branchInstance.transform.localScale = new Vector2(-branchInstance.transform.localScale.x, branchInstance.transform.localScale.y);
+                branchPosition = new Vector2(-_xOffset, _branchSpawnPoint.position.y);
+                branchType = _leftBranch;
                 break;
 
             case EPosition.Right:
-                branchInstance.transform.position = new Vector2(_xOffset, branchInstance.transform.position.y);
+                branchPosition = new Vector2(_xOffset, _branchSpawnPoint.position.y);
+                branchType = _rightBranch;
                 break;
-
         }
+
+        Branch branchInstance = UnityEngine.Object.Instantiate(branchType, branchPosition, Quaternion.identity).GetComponent<Branch>();
+        branchInstance.Initialize(_player);
+        branchInstance.BranchDestroyed += DestroyBranch;
+        _branches.Enqueue(branchInstance);
+
     }
 
     private void DestroyBranch()
