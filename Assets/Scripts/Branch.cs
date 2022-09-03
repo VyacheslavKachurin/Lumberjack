@@ -11,7 +11,7 @@ public class Branch : MonoBehaviour
     private float _step;
     private Player _player;
     private Rigidbody2D _rb;
-    private bool _movingAllowed = false;
+    private bool _isMovingAllowed = false;
     private Vector2 _particlePosition = new(1.43f, -3.81f);
 
     public void Initialize(Player player)
@@ -30,27 +30,37 @@ public class Branch : MonoBehaviour
     private void MoveDown()
     {
         if (Values.Instance.IsGameOn)
-            _movingAllowed = true;
+            _isMovingAllowed = true;
         else
-            _movingAllowed = false;
+            _isMovingAllowed = false;
     }
 
     private void FixedUpdate()
     {
-        if (_movingAllowed)
+        if (_isMovingAllowed)
         {
             _rb.MovePosition(_rb.position + Vector2.down * _step);
-            _movingAllowed = false;
+            _isMovingAllowed = false;
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision) => BranchDestroyed?.Invoke();
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+            _isMovingAllowed = false;
+        else
+            BranchDestroyed?.Invoke();
+
+    }
 
     public void DestroyBranch()
     {
+        _isMovingAllowed = false;
         _player.PlayerMoved -= MoveDown;
 
-        Instantiate(_branchParticle, _particlePosition, Quaternion.identity);
+        if (Values.Instance.IsGameOn)
+            Instantiate(_branchParticle, _particlePosition, Quaternion.identity);
+
         Destroy(gameObject);
     }
 

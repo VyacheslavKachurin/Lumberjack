@@ -67,6 +67,9 @@ public class GameManager : MonoBehaviour
 
         _player.PlayerChangedPosition += (position) =>
         {
+            if (!Values.Instance.IsGameOn)
+                return;
+
             if (position == EPosition.Left)
                 _shaftParticles.PlayRight();
             else
