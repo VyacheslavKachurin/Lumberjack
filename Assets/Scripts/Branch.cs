@@ -19,7 +19,7 @@ public class Branch : MonoBehaviour
         _player = player;
         _player.PlayerMoved += MoveDown;
 
-        _step = Player.Height * 1.5f;
+        _step = _player.Height * 1.5f;
 
         if (transform.position.x < 0)
             _particlePosition.x *= -1;

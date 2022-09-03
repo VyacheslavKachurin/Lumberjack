@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public static float Height;
+    public float Height { get; private set; }
+
+    [SerializeField] private AudioClip _chopSound;
+    [SerializeField] private AudioClip _deathSound;
     public event Action PlayerMoved;
     public event Action<EPosition> PlayerChangedPosition;
 
@@ -13,17 +16,28 @@ public class Player : MonoBehaviour
     public event Action PlayerDisabled;
 
     private float _xStep;
+    private float _volume = 0.2f;
+
     private Animator _anim;
+    private AudioSource _audioSource;
 
     void Start()
     {
 
         Height = transform.lossyScale.y;
         _anim = GetComponent<Animator>();
+        _audioSource = GetComponent<AudioSource>();
 
         _xStep = 2 * transform.lossyScale.x;
         PlayerDied += () => _anim.Play("Base Layer.Die");
+        PlayerMoved += () =>
+        {
+            if (Values.Instance.IsGameOn)
 
+                _audioSource.PlayOneShot(_chopSound, _volume);
+        };
+
+        PlayerDisabled += () => _audioSource.PlayOneShot(_deathSound, _volume);
     }
 
     public void Initialize(InputManager inputManager)
