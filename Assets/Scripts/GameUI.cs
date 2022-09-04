@@ -45,7 +45,7 @@ public class GameUI : MonoBehaviour
         PlayButtonPressed += HideMenuPanel;
 
         _tryAgainText.enabled = false;
-        _gameOverText.enabled = false;
+        _gameOverText.gameObject.SetActive(false);
     }
 
     public void UpdateLevelNumber(int value) => _levelNumberText.text = value.ToString();
@@ -54,11 +54,11 @@ public class GameUI : MonoBehaviour
     private void TogglePausePanel() => _pausePanel.SetActive(!_pausePanel.activeInHierarchy);
     public void HideMenuPanel() => _menuPanel.SetActive(false);
 
-    public void HideStartText() => _titleText.enabled = false;
+    public void HideStartText() => _titleText.gameObject.SetActive(false);
     public void HideRestartText()
     {
         _tryAgainText.enabled = false;
-        _gameOverText.enabled = false;
+        _gameOverText.gameObject.SetActive(false);
     }
 
     public void UpdateHighScoreText(int text) => _highScoreNumber.text = text.ToString();
@@ -66,7 +66,7 @@ public class GameUI : MonoBehaviour
     public void ShowRestartText()
     {
         _tryAgainText.enabled = true;
-        _gameOverText.enabled = true;
+        _gameOverText.gameObject.SetActive(true);
         _playButton.GetComponent<Image>().color = Color.green;
         _playButton.onClick.RemoveAllListeners();
         _playButton.onClick.AddListener(() => RestartButtonPressed?.Invoke());
